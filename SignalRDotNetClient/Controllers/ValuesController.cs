@@ -10,40 +10,74 @@ namespace SignalRDotNetClient.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly ChatClient chat;
+
+        public ValuesController()
+        {
+            chat = new ChatClient();
+            chat.StartConnection().GetAwaiter().GetResult();
+        }
+
         // GET api/values
         [HttpGet]
         public async Task<ActionResult<string>> Get()
         {
 
-            ChatClient chat = new ChatClient();
             await chat.SendMessage();
 
-            return "Sent...";
+            return "Sent ...";
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        [HttpGet]
+        [Route("list")]
+        public async Task<ActionResult<string>> List()
         {
-            return "value";
+
+            await chat.SendList();
+
+            return "Sent list...";
         }
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpGet]
+        [Route("array")]
+        public async Task<ActionResult<string>> Array()
         {
+
+            await chat.SendArray();
+
+            return "Sent array...";
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpGet]
+        [Route("obj")]
+        public async Task<ActionResult<string>> Object()
         {
+
+            await chat.SendObject();
+
+            return "Sent object...";
         }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpGet]
+        [Route("opt")]
+        public async Task<ActionResult<string>> Optional()
         {
+
+            await chat.SendOptonal();
+
+            return "Sent optional...";
+        }
+
+        [HttpGet]
+        [Route("alert")]
+        public async Task<ActionResult<string>> Alert()
+        {
+
+            await chat.SendAlert();
+
+            return "Sent alert...";
         }
     }
+
+
 }
