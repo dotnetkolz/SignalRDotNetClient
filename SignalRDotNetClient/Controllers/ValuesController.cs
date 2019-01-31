@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace SignalRDotNetClient.Controllers
 {
@@ -11,7 +12,6 @@ namespace SignalRDotNetClient.Controllers
     public class ValuesController : ControllerBase
     {
         private readonly ChatClient chat;
-
         public ValuesController()
         {
             chat = new ChatClient();
