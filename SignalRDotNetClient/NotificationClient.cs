@@ -1,26 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace SignalRDotNetClient
 {
-    public class ChatClient
+    public class NotificationClient
     {
 
         HubConnection connection;
 
-        public ChatClient()
+        public NotificationClient()
         {
-            //connection = new HubConnectionBuilder()
-            //.WithUrl("wss://localhost:5001/chatHub")
-            //.Build();
-            //https://localhost:5001/notificationHub
 
             connection = new HubConnectionBuilder()
-                                //.WithUrl("http://ebzweb-dt-1d6:96/notificationHub", options =>
-                                .WithUrl("https://localhost:5001/notificationHub", options => 
+                                .WithUrl("http://ebzweb-dt-1d6:96/notificationHub", options =>
                                 {
                                     options.Headers.Add("User-GUID", "642609410611072018Comcast.ident");
                                     options.Headers.Add("CIMA-User-Principal-GUID", "642609410611072018Comcast.ident");
@@ -30,8 +24,6 @@ namespace SignalRDotNetClient
                                     options.Headers.Add("Authorization", 
                                         "Bearer " +
                                         "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJDdXN0b21lckd1aWQiOiI2NDI2MDk0MTA2MTEwNzIwMThDb21jYXN0LmlkZW50IiwiRmlyc3ROYW1lIjoiQlJUIiwiSXNDb21jYXN0VXNlciI6ZmFsc2UsIkxhc3ROYW1lIjoiVXNlciIsIkxvZ2luRW1haWwiOiJ0aGVicnQudGVhbUBnbWFpbC5jb20iLCJNb2JpbGVQaG9uZU51bWJlciI6bnVsbCwiUGFzc3dvcmRDaGFuZ2VUaW1lU3RhbXAiOiIyMDE4LTA3LTExVDE4OjQxOjA5LjBaIiwiUHJpbWFyeUFjY291bnROdW1iZXIiOiI5MzA5MDQwMjUiLCJTdGF0dXMiOiJBIiwiSGlnaGVzdFJvbGUiOiJBZG1pbmlzdHJhdG9yQmlsbFBheUNvbWJvIiwiUHJpbWFyeUFjY291bnRBdXRoR3VpZCI6Ijg5MTE0NzI1MzQzNTIxMjcwNDIwMThBTSIsIkFjY291bnRMaXN0IjpbeyJBY2NvdW50QmFzaWNJbmZvIjp7IkFjY291bnRIb21lUGhvbmUiOiI3MjAzMjA1Mjc3IiwiQWNjb3VudElkTWFwR3VpZCI6bnVsbCwiQWNjb3VudE51bWJlciI6IjkzMDkwNDAyNSIsIkFjY291bnRQaG9uZSI6bnVsbCwiQWNjb3VudFR5cGUiOiJCIiwiQXV0aEd1aWQiOiI4OTExNDcyNTM0MzUyMTI3MDQyMDE4QU0iLCJDb21wYW55TmFtZSI6IkFCQyBEZW1vIE5ldHdvcmsiLCJGcmllbmRseUFjY291bnROYW1lIjoiQUJDIERlbW8gTmV0d29yayIsIkdyb3VwSWQiOm51bGwsIkxvY2FsQmlsbGVyQWNjb3VudE5vIjpudWxsLCJQcmltYXJ5Q3VzdG9tZXJHdWlkIjoiMjIxNzUyMzQwMzMwMDQyMDE4Q29tY2FzdC5pZGVudCIsIlByb2R1Y3RDYXRlZ29yaWVzIjpbIlNERklSRVdBTEwiLCJTRFdBTiJdLCJUb3RhbElkZW50aXRpZXMiOiIxNyJ9LCJoYXNCdXNpbmVzc0NsYXNzVm9pY2UiOmZhbHNlLCJoYXNFbnRlcnByaXNlVm9pY2UiOmZhbHNlLCJpc1NoZWxsQWNjb3VudCI6dHJ1ZSwiaXNBY3RpdmUiOnRydWUsImlzT25ib2FyZGluZyI6ZmFsc2UsImlzQ29udHJvbGxlckFjY291bnQiOmZhbHNlLCJoYXNBY3RpdmVIc2QiOmZhbHNlLCJpc05vbkNhYmxlIjpmYWxzZSwiaGFzT25ib2FyZGluZ0hzZCI6ZmFsc2UsImhhc0FjdGl2ZVZvaWNlIjpmYWxzZSwiaGFzT25ib2FyZGluZ1ZvaWNlIjpmYWxzZSwiaGFzQWN0aXZlVmlkZW8iOmZhbHNlLCJoYXNPbmJvYXJkaW5nVmlkZW8iOmZhbHNlLCJoYXNMZWdhY3lGaWJlciI6ZmFsc2UsImhhc0V0aGVybmV0IjpmYWxzZSwic2VydmljZUFkZHJlc3MiOnsiYWRkcmVzc1R5cGUiOjAsInN0cmVldEFkZHJlc3NMaW5lMSI6IjE0MyBVbmlvbiBCbHZkIFN0ZSA0MDAiLCJjaXR5IjoiSmVmZmVyc29uIiwic3RhdGUiOiJDTyIsInppcENvZGUiOiI4MDIyOCJ9LCJjb21tZXJjaWFsTG9iTGlzdCI6W10sImN1YnNjcmliZWRTZXJ2aWNlcyI6W10sImlzRW50ZXJwcmlzZSI6dHJ1ZSwiaXNEZHAiOmZhbHNlLCJpc0NzZyI6ZmFsc2UsImlzU21iIjpmYWxzZSwiaXNCdmUiOmZhbHNlLCJtYXJrZXRJZCI6IiIsImNvcnAiOm51bGx9XSwiQWN0aXZlQ29yZVByb2R1Y3RUeXBlIjoiU0RXQU4iLCJDb21wYW55TmFtZSI6IkFCQyBEZW1vIE5ldHdvcmsiLCJJc0RlbW9BZ2VudCI6ZmFsc2UsIlNkV2FuQWNjb3VudE51bWJlciI6IjkzMDkwNDAyNSIsIkltcGVyc29uYXRvcklkIjpudWxsfQ.8Joyq5iwdZQCIaq-tOLmebkOmfvYRTjZnckFlxtbkgg");
-
-                                    //options.Cookies.Add()
                                 })
                                 .Build();
 
@@ -50,11 +42,6 @@ namespace SignalRDotNetClient
                 });
         }
 
-        //public Task<string> AccessToken()
-        //{
-        //    return "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJDdXN0b21lckd1aWQiOiIxNjkwNDAxODA1MDYwOTIwMThDb21jYXN0LmlkZW50IiwiRmlyc3ROYW1lIjoibGVlIiwiSXNDb21jYXN0VXNlciI6ZmFsc2UsIkxhc3ROYW1lIjoiYmVyayIsIkxvZ2luRW1haWwiOiJsZWVfYmVya0B5b3BtYWlsLmNvbSIsIk1vYmlsZVBob25lTnVtYmVyIjpudWxsLCJQYXNzd29yZENoYW5nZVRpbWVTdGFtcCI6IjIwMTgtMDktMDZUMTc6MTg6NDAuMFoiLCJQcmltYXJ5QWNjb3VudE51bWJlciI6IjkzNDUxMzI5NiIsIlN0YXR1cyI6IkEiLCJIaWdoZXN0Um9sZSI6IkFkbWluaXN0cmF0b3IiLCJQcmltYXJ5QWNjb3VudEF1dGhHdWlkIjoiOTQxMTQ0NDMwNjE5MDYyMDE4Q29tY2FzdC5BU1VCIiwiQWNjb3VudExpc3QiOlt7IkFjY291bnRCYXNpY0luZm8iOnsiQWNjb3VudEhvbWVQaG9uZSI6bnVsbCwiQWNjb3VudElkTWFwR3VpZCI6bnVsbCwiQWNjb3VudE51bWJlciI6IjkzNDUxMzI5NiIsIkFjY291bnRQaG9uZSI6bnVsbCwiQWNjb3VudFR5cGUiOiJCIiwiQXV0aEd1aWQiOiI5NDExNDQ0MzA2MTkwNjIwMThDb21jYXN0LkFTVUIiLCJDb21wYW55TmFtZSI6Ik5hdGlvbmFsX0luZGlyZWN0X0RlbW8iLCJGcmllbmRseUFjY291bnROYW1lIjoiTmF0aW9uYWxfSW5kaXJlY3RfRGVtbyIsIkdyb3VwSWQiOm51bGwsIkxvY2FsQmlsbGVyQWNjb3VudE5vIjoiOTM0NTEzMjk2IiwiUHJpbWFyeUN1c3RvbWVyR3VpZCI6Ijg4NDcyNjU3MDYxOTA2MjAxOENvbWNhc3QuaWRlbnQiLCJQcm9kdWN0Q2F0ZWdvcmllcyI6WyJTRFdBTiJdLCJUb3RhbElkZW50aXRpZXMiOiIxMTQifSwiaGFzQnVzaW5lc3NDbGFzc1ZvaWNlIjpmYWxzZSwiaGFzRW50ZXJwcmlzZVZvaWNlIjpmYWxzZSwiaXNTaGVsbEFjY291bnQiOnRydWUsImlzQWN0aXZlIjp0cnVlLCJpc09uYm9hcmRpbmciOmZhbHNlLCJpc0NvbnRyb2xsZXJBY2NvdW50IjpmYWxzZSwiaGFzQWN0aXZlSHNkIjpmYWxzZSwiaXNOb25DYWJsZSI6ZmFsc2UsImhhc09uYm9hcmRpbmdIc2QiOmZhbHNlLCJoYXNBY3RpdmVWb2ljZSI6ZmFsc2UsImhhc09uYm9hcmRpbmdWb2ljZSI6ZmFsc2UsImhhc0FjdGl2ZVZpZGVvIjpmYWxzZSwiaGFzT25ib2FyZGluZ1ZpZGVvIjpmYWxzZSwiaGFzTGVnYWN5RmliZXIiOmZhbHNlLCJoYXNFdGhlcm5ldCI6ZmFsc2UsInNlcnZpY2VBZGRyZXNzIjp7ImFkZHJlc3NUeXBlIjowLCJzdHJlZXRBZGRyZXNzTGluZTEiOiIxODAwIEJJU0hPUFMgR0FURSBCTFZEIiwiY2l0eSI6Ik10LiBMYXVyZWwiLCJzdGF0ZSI6Ik5KIiwiemlwQ29kZSI6IjA4MDU0In0sImNvbW1lcmNpYWxMb2JMaXN0IjpbXSwiY3Vic2NyaWJlZFNlcnZpY2VzIjpbXSwiaXNFbnRlcnByaXNlIjp0cnVlLCJpc0RkcCI6ZmFsc2UsImlzQ3NnIjpmYWxzZSwiaXNTbWIiOmZhbHNlLCJpc0J2ZSI6ZmFsc2UsIm1hcmtldElkIjoiIiwiY29ycCI6bnVsbH1dLCJBY3RpdmVDb3JlUHJvZHVjdFR5cGUiOiJTRFdBTiIsIkNvbXBhbnlOYW1lIjoiTmF0aW9uYWxfSW5kaXJlY3RfRGVtbyIsIklzRGVtb0FnZW50IjpmYWxzZSwiU2RXYW5BY2NvdW50TnVtYmVyIjoiOTM0NTEzMjk2IiwiSW1wZXJzb25hdG9ySWQiOm51bGx9.AmMMQlPu0MZPVkK5HY5aNwCaMdN8bQafALUVzE4HxCg";
-        //}
-
         public async Task StartConnection()
         {
             try
@@ -68,21 +55,30 @@ namespace SignalRDotNetClient
             }
         }
 
-        public async Task SendMessage()
+        public async Task SendMessage(string topic)
         {
-            try
-            {
-                //await connection.StartAsync();
                 await connection.InvokeAsync(
-                    "SendMessage",
-                    "API",
-                    "Hello");
-            }
-            catch(Exception ex)
-            {
-                var z = ex;
-            }
+                    "Publish",
+                    new PublishNotificationModel
+                    {
+                        GroupName = "ActiveCore/" + topic,
+                        Data = new { user = "Every one", message = topic },
+                        Method = topic
+                    });
+         
+        }
 
+        public async Task SendMessage(string topic, string account)
+        {
+                await connection.InvokeAsync(
+                    "Publish",
+                    new PublishNotificationModel
+                    {
+                        GroupName = "ActiveCore/" + topic + "/" + account,
+                        Data = new { account, message= topic },
+                        Method = topic
+                    });
+         
         }
 
         public async Task SendList()
@@ -221,5 +217,16 @@ namespace SignalRDotNetClient
         /// </summary>
         /// <value>The status site/device.</value>
         public string Status { get; set; }
+
+        public string Topic { get; set; }
+        public string Group { get; set; }
+
+    }
+
+    public class PublishNotificationModel
+    {
+        public string GroupName { get; set; }
+        public string Method { get; set; }
+        public object Data { get; set; }
     }
 }
